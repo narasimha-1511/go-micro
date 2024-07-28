@@ -14,15 +14,18 @@ type App struct {
 	rdb *redis.Client
 }
 
-func New() *App {
-	
+
+func New(config Config) *App {
 	app := &App{
-		router: loadRoutes(),
-		rdb: redis.NewClient(&redis.Options{}),
+		rdb: redis.NewClient(&redis.Options{
+			Addr: config.RedisAddress,
+		}),
+		config: config,
 	}
 
+	app.loadRoutes()
+	
 	return app
-
 }
 
 // to start the redis serverin windows --> run on the wsl follow redis documentation
